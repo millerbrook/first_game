@@ -77,17 +77,26 @@ class AlienInvasion:
         self.bullets.update()
 
         # Get rid of bullets that have disappeared.
-            for bullet in self.bullets.copy():
-                if bullet.rect.bottom <=0:
-                    self.bullets.remove(bullet)
-                print(len(self.bullets))
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <=0:
+                self.bullets.remove(bullet)
 
     def _create_fleet(self):
         """Create a fleet of aliens"""
-        #Make an alien.
+        #Craete an alien and find the number of aliens in a row.
+        # Spacing between each alien is equal to one alien width.
         alien = Alien(self)
-        self.aliens.add(alien)
+        alien_width = alien.rect.width
+        available_space_x = self.settings.screen_width - (2* alien_width)
+        number_aliens_x = available_space_x // (2*alien_width)
 
+        #Create the first row of aliens
+        for alien_number in range(number_aliens_x):
+            #Create an alien and place it in the row.
+            alien = Alien(self)
+            alien.x = alien_width + 2 * alien_width * alien_number
+            alien.rect.x = alien.x
+            self.aliens.add(alien)
 
     def _update_screen(self):
         # Redraw screen during each pass through the loop
