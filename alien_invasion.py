@@ -21,7 +21,6 @@ class AlienInvasion:
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
-
         self._create_fleet()
 
         # Set the background color
@@ -77,16 +76,15 @@ class AlienInvasion:
         """Update position of bullets and get rid of old bullets."""
         #Update bullet positions
         self.bullets.update()
-    
-    def _update_aliens(self):
-        """Check if the fleet is at an edge, then update the position of all aliens in the fleet"""
-        self._check_fleet_edges()
-        self.aliens.update()
-
         # Get rid of bullets that have disappeared.
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <=0:
                 self.bullets.remove(bullet)
+
+    def _update_aliens(self):
+        """Check if the fleet is at an edge, then update the position of all aliens in the fleet"""
+        self._check_fleet_edges()
+        self.aliens.update()
 
     def _create_fleet(self):
         """Create a fleet of aliens"""
