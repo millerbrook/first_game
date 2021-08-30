@@ -41,17 +41,22 @@ class AlienInvasion:
         # Decrement ships_left.
         self.stats.ships_left -= 1
 
-        #Get rid of any remaining aliens and bullets.
-        self.aliens.empty()
-        self.bullets.empty()
+        if self.stats.ships_left > 0:
 
-        # Create a new fleet and center the ship.
-        self._create_fleet()
-        self.ship.center_ship()
+            #Get rid of any remaining aliens and bullets.
+            self.aliens.empty()
+            self.bullets.empty()
 
-        # Pause.
-        sleep(0.5)
+            # Create a new fleet and center the ship.
+            self._create_fleet()
+            self.ship.center_ship()
 
+            # Pause.
+            sleep(0.5)
+        else:
+            self.stats.game_active = False
+            pygame.mouse.set_visible(True)
+            
     def run_game(self):
         """Start the main game loop"""
         while True:
@@ -67,10 +72,32 @@ class AlienInvasion:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+    
+    def _check_play_button(self, mouse_pos):
+        """Start a new game when the player clicks Play."""
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.stats.game_active:
+            # Reset the game statistics.
+            self.stats.reset_stats()
+            self.stats.game_active = True
+
+            #Get rid of any remaining aliens and bullets.
+            self.aliens.empty()
+            self.bullets.empty()
+
+            #Create a new fleet and center the ship.
+            self._create_fleet()
+            self.ship.center_ship()
+
+            #Hide the mouse cursor.
+            pygame.mouse.set_visible(False)
 
     def _check_keydown_events(self, event):
         """Respond to keypresses"""
